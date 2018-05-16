@@ -19,7 +19,7 @@ namespace InferenceEngine
 			System.IO.StreamReader file = new System.IO.StreamReader(fileName);
 			string line;    //Holds current line from the file
 
-
+			//TODO: Change this to work off the content of the prevous line, not the line number.
 			// Read the file line by line.  
 			while ((line = file.ReadLine()) != null)
 			{
