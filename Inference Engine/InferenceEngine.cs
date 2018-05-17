@@ -34,7 +34,7 @@ namespace InferenceEngine
 						//Remove the trailing semicolon and convert to an array.
 
 						line = line.TrimEnd(line[line.Length - 1]);
-						line = line.Trim();
+						line = line.Replace(" ", "");
 						string[] splitLine = line.Split(';');
 
 						//TODO: Finish this
