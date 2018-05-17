@@ -12,8 +12,8 @@ namespace InferenceEngine
 		protected List<String> clauses = new List<String>();
 
 		protected string question;
-		protected int counter = 0;
 		public abstract string Infer();
+		private int lineCount;
 		//protected string[] ask;
 		//protected string tell;
 
@@ -27,7 +27,7 @@ namespace InferenceEngine
 			while ((line = file.ReadLine()) != null)
 			{
 				//Get relevent data from lines 1 and 4 (starting from 0)
-				switch (counter)
+				switch (lineCount)
 				{
 					//TELL
 					case 1:
@@ -57,7 +57,7 @@ namespace InferenceEngine
 						question = line;
 						break;
 				}
-				counter++;
+				lineCount++;
 			}
 
 			//Close the File when finished
