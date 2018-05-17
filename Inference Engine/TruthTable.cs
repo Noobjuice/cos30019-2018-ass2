@@ -8,15 +8,26 @@ namespace InferenceEngine
 {
 	class TruthTable : InferenceEngine
 	{
-		//getModels
-
+		private int counter = 0;
 
 		public override string Infer()
 		{
 			//Foreach node in KB.iterateOverAllModels() do
+			for (int i = 1; i < Math.Pow(2, facts.Count()); i++)
+			{
+				//Calculate truth table row
+
 				//If Test (n, KB) true
-						//If not Test(n, Q) then
-							//Return false
+				if (false)
+				{
+					//If not Test(n, Q) then
+					if (false)
+					{
+						return "NO";
+					}
+				}
+			}
+			return "YES " + counter;
 
 
 

@@ -12,7 +12,7 @@ namespace InferenceEngine
 		protected List<String> clauses = new List<String>();
 
 		protected string question;
-		int counter = 0;
+		protected int counter = 0;
 		public abstract string Infer();
 		//protected string[] ask;
 		//protected string tell;
