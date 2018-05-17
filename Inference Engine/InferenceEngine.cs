@@ -8,11 +8,14 @@ namespace InferenceEngine
 {
 	abstract class InferenceEngine
 	{
-		protected char question;
+		protected List<String> facts = new List<String>();
+		protected List<String> clauses = new List<String>();
+
+		protected string question;
 		int counter = 0;
 		public abstract string Infer();
-		protected string[] ask;
-		protected string tell;
+		//protected string[] ask;
+		//protected string tell;
 
 		public void fileIn(string fileName)
 		{
@@ -29,13 +32,29 @@ namespace InferenceEngine
 					//TELL
 					case 1:
 						//Remove the trailing semicolon and convert to an array.
+
 						line = line.TrimEnd(line[line.Length - 1]);
-						ask = line.Split(';');
+						line = line.Trim();
+						string[] splitLine = line.Split(';');
+
+						//TODO: Finish this
+						for (int i=0; i<splitLine.Length; i++){
+							if (splitLine[i].Contains("=>") == false)
+							{
+								facts.Add(splitLine[i]);
+							}
+
+							else
+							{
+								clauses.Add(splitLine[i]);
+							}
+						}
 						break;
 
 					//ASK
 					case 3:
-						tell = line;
+						//tell = line;
+						question = line;
 						break;
 				}
 				counter++;
