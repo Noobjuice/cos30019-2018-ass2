@@ -9,9 +9,10 @@ namespace InferenceEngine
 	class TruthTable : InferenceEngine
 	{
 		private int count = 0;
-		private int rowsTotal;
+		private int columnCount;
 
 		//Calculate truth table row
+		//TODO: Figure out why it's giving a list of 3-5 results instead of always 4.
 		private List<bool> getRow(int rowNum)
 		{
 			List<bool> result = new List<bool>();
@@ -20,10 +21,11 @@ namespace InferenceEngine
 
 			//Convert the row number into a binary string
 			rowNumStr = Convert.ToString(rowNum, 2);
-			rowNumStr.Reverse();
+			//TODO: Delete This
+			//rowNumStr.Reverse();
 
 			//Pad out the string with extra zeros
-			rowNumStr = rowNumStr.PadRight(rowsTotal - rowNumStr.Length + 1, '0');
+			rowNumStr = rowNumStr.PadLeft(columnCount, '0');
 			rowNumArray = rowNumStr.ToCharArray();
 
 			//TODO: Delete this
@@ -55,7 +57,7 @@ namespace InferenceEngine
 		public override string Infer()
 		{
 			//Foreach node in KB.iterateOverAllModels() do
-			for (int i = 1; i < Math.Pow(2, rowsTotal); i++)
+			for (int i = 1; i <= Math.Pow(2, columnCount); i++)
 			{
 				List<bool> row = getRow(i);
 
@@ -81,7 +83,7 @@ namespace InferenceEngine
 
 		public TruthTable(string input) : base(input)
 		{
-			rowsTotal = facts.Count() + 1;
+			columnCount = facts.Count() + 1;
 		}
 	}
 }
