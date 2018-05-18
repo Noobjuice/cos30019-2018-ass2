@@ -54,6 +54,16 @@ namespace InferenceEngine
 
 		}
 
+		private bool testKB(List<bool> row)
+		{
+			return true;
+		}
+
+		private bool testQuestion(List<bool> row)
+		{
+			return false;
+		}
+
 		public override string Infer()
 		{
 			//Foreach node in KB.iterateOverAllModels() do
@@ -62,10 +72,10 @@ namespace InferenceEngine
 				List<bool> row = getRow(i);
 
 				//If Test (n, KB) true
-				if (true)
+				if (testKB(row))
 				{
 					//If not Test(n, Q) then
-					if (false)
+					if (testQuestion(row))
 					{
 						return "NO";
 					}
