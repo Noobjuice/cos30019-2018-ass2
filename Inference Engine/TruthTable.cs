@@ -12,7 +12,8 @@ namespace InferenceEngine
 		private int rowCount;       //Number of rows in the truth table
 		private int columnCount;    //Number of collumns in the truth table
 
-		private List<String> colHeadings;	//A list of all the facts, including ones that are part of clauses
+		private List<String> colHeadings;   //A list of all the facts, including ones that are part of clauses
+		private List<String> alphaClauses = new List<string>();
 
 		//Calculate truth table row
 		//TODO: Figure out why it's giving a list of 3-5 results instead of always 4.
@@ -20,7 +21,7 @@ namespace InferenceEngine
 		/*
 		* Adds all the facts in the clauses list to the facts list
 		*/
-		private void AddAllFacts()
+		private void getColHeaders()
 		{
 			string[] clauseFacts;   //Holds the facts in each clause
 			string[] leftFacts;     //Holds the facts in the left side of the clause (if there's more than one fact)
@@ -35,7 +36,7 @@ namespace InferenceEngine
 					);
 
 				//Add right fact
-				addFact(clauseFacts[1]);
+				addColHeader(clauseFacts[1]);
 
 				//If multiple facts on left side of clause, extract each one and add to list of facts
 				if (clauseFacts[0].Contains("&"))
@@ -49,13 +50,13 @@ namespace InferenceEngine
 					//Add each fact to the list
 					for (int i = 0; i < clauseFacts.Length; i++)
 					{
-						addFact(leftFacts[i]);
+						addColHeader(leftFacts[i]);
 					}
 				}
 				//If only one fact on left side, add to facts list
 				else
 				{
-					addFact(clauseFacts[0]);
+					addColHeader(clauseFacts[0]);
 				}
 			}
 		}
@@ -64,7 +65,7 @@ namespace InferenceEngine
 		 * Adds a single fact to the facts list if it isn't already in the list.
 		 * @fact: the fact to be added
 		*/
-		private void addFact(string fact)
+		private void addColHeader(string fact)
 		{
 			bool inList = false;    //Used to determine if fact is already in list
 			//If fact isn't in facts list, add it
@@ -79,6 +80,59 @@ namespace InferenceEngine
 			if (!inList)
 			{
 				colHeadings.Add(fact);
+			}
+		}
+
+		/*
+		* TODO: Finish This
+		*/
+		private void GetAlphaClauses()
+		{
+			string[] clauseFacts;   //Holds all the facts in the clause
+			string[] leftFacts;     //Holds the facts on the left side of the clause (if more than one)
+
+			foreach (string clause in clauses)
+			{
+
+				//Break clause into facts
+				clauseFacts = clause.Split(
+					new[] { "=>" },
+					StringSplitOptions.RemoveEmptyEntries
+					);
+
+				//Check if right side of clause contains question
+				if (question == clauseFacts[1])
+				{
+					alphaClauses.Add(clause);
+				}
+				//Check if left side of clause contains question
+				else
+				{
+					//If left side has multiple facts, check them all
+					if (clauseFacts[0].Contains('&'))
+					{
+						leftFacts = clauseFacts[0].Split(
+							new[] { "&" },
+							StringSplitOptions.RemoveEmptyEntries
+							);
+						for (int i = 0; i < clauseFacts.Length; i++)
+						{
+							if (question == leftFacts[i])
+							{
+								alphaClauses.Add(clause);
+								break;
+							}
+						}
+					}
+					//If the left side contains one fact, check if it's the question
+					else
+					{
+						if (question == clauseFacts[1])
+						{
+							alphaClauses.Add(clause);
+						}
+					}
+				}
 			}
 		}
 
@@ -159,6 +213,7 @@ namespace InferenceEngine
 				left = row[colHeadings.IndexOf(clauseFacts[0])];
 			}
 
+			//Perform the implication (changed using De Morgan's law)
 			return !left | right;
 		}
 
@@ -176,7 +231,6 @@ namespace InferenceEngine
 				}
 			}
 
-
 			//Check if all the clauses are true on the current line
 			foreach (string clause in clauses)
 			{
@@ -189,66 +243,22 @@ namespace InferenceEngine
 			return true;
 		}
 
-		//TODO: Make a list of clauses that contain the string, then check for them when the object is initiated
+		/*
+		* TODO: Finish This
+		*/
 		private bool testAlpha(List<bool> row)
 		{
-			string[] clauseFacts;   //Holds all the facts in the clause
-			string[] leftFacts;     //Holds the facts on the left side of the clause (if more than one)
-			bool qInClause;
+			bool alphaVal = row[colHeadings.IndexOf(question)];
 
 			//TODO: Check if Alpha is a fact
-			foreach (string clause in clauses)
+			//TODO: Figure out how to test for alpha properly
+
+			//Check
+			foreach (string clause in alphaClauses)
 			{
-				bool qBool = row[colHeadings.IndexOf(question)];	//The boolean value for alpha in this row
-				qInClause = false;							//Used to check if the question is in the clause
-				
-				//Break clause into facts
-				clauseFacts = clause.Split(
-					new[] { "=>" },
-					StringSplitOptions.RemoveEmptyEntries
-					);
-
-				//Check if right side of clause contains question
-				if (question == clauseFacts[1])
+				if (!(solveClause(clause, row) && alphaVal))
 				{
-					qInClause = true;
-				}
-				//Check if left side of clause contains question
-				else
-				{
-					//If left side has multiple facts, check them all
-					if (clauseFacts[0].Contains('&'))
-					{
-						leftFacts = clauseFacts[0].Split(
-							new[] { "&" },
-							StringSplitOptions.RemoveEmptyEntries
-							);
-						for (int i = 0; i < clauseFacts.Length;  i++)
-						{
-							if(question == leftFacts[i])
-							{
-								qInClause = true;
-								break;
-							}
-						}
-					}
-					//If the left side contains one fact, check if it's the question
-					else
-					{
-						if (question == clauseFacts[1])
-						{
-							qInClause = true;
-						}
-					}
-				}
-
-				//If alpha is part of the clause, check if the clause entails alpha
-				if (qInClause)
-				{
-					if ( ! (solveClause(clause, row) && qBool) )
-					{
-						return false;
-					}
+					return false;
 				}
 			}
 			return true;
@@ -271,10 +281,10 @@ namespace InferenceEngine
 				if (testKB(row))
 				{
 					//If not Test(n, Q) then
-					//if (testAlpha(row))
-					//{
+					if (testAlpha(row))
+					{
 						count++;
-					//}
+					}
 					/*else
 					{
 						return "NO";
@@ -287,7 +297,8 @@ namespace InferenceEngine
 		public TruthTable(string input) : base(input)
 		{
 			colHeadings = new List<string>(facts);
-			AddAllFacts();
+			getColHeaders();
+			GetAlphaClauses();
 			//columnCount = facts.Count() + 1;
 			columnCount = colHeadings.Count();
 			rowCount = Convert.ToInt32(Math.Pow(2, columnCount));
