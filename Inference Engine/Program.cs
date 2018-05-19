@@ -13,11 +13,9 @@ namespace InferenceEngine
 			//Get Arguments from Command Line
 			String[] arguments = Environment.GetCommandLineArgs();
 
-			//TODO: Revert this back (makes testing easier)
-			//string method = arguments[1];
-			//string filename = arguments[2];
 			string method = "TT";
-			string filename = "test1(2).txt";
+			//Name of the test file (test1.txt, test2.txt)
+			string filename = "test1.txt";
 
 			InferenceEngine IE;
 
