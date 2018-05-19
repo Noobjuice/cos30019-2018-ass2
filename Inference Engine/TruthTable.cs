@@ -8,11 +8,15 @@ namespace InferenceEngine
 {
 	class TruthTable : InferenceEngine
 	{
-		private int count = 0;
-		private int columnCount;
+		private int count = 0;		//Total rows entailed by knowlege base
+		private int columnCount;	//Number of collumns in the truth table
 
 		//Calculate truth table row
 		//TODO: Figure out why it's giving a list of 3-5 results instead of always 4.
+
+		/*
+		* TODO: Finish This
+		*/
 		private List<bool> getRow(int rowNum)
 		{
 			List<bool> result = new List<bool>();
@@ -46,7 +50,6 @@ namespace InferenceEngine
 				}
 			}
 
-			//Convert into an array
 			return result;
 			
 			//TODO: Delete this
@@ -54,15 +57,17 @@ namespace InferenceEngine
 
 		}
 
+		/*
+		* TODO: Finish This
+		*/
 		private bool testKB(List<bool> row)
 		{
 			foreach (string clause in clauses)
 			{
-				bool left = true;
-				bool right = true;
-
-				string[] clauseFacts;
-				string[] leftFacts;
+				bool left = true;		//Used to store result of left side of clause
+				bool right = true;		//Used to store result of right side of clause
+				string[] clauseFacts;	//Holds all the facts in the clause
+				string[] leftFacts;     //Holds the facts on the left side of the clause (if more than one)
 
 
 				//Break clause into facts
@@ -73,13 +78,13 @@ namespace InferenceEngine
 
 				//Get corresponding boolean values for facts
 				right = row[facts.IndexOf(clauseFacts[1])];
-				//If left side contains more than one fact, combine all corresponding row values
+				//If left side contains more than one fact, combine all corresponding boolean values
 				if (clauseFacts[0].Contains('&'))
 				{
 					leftFacts = clauseFacts[0].Split(
-					new[] { "&" },
-					StringSplitOptions.RemoveEmptyEntries
-					);
+						new[] { "&" },
+						StringSplitOptions.RemoveEmptyEntries
+						);
 
 					for (int i = 0; i < leftFacts.Length; i++)
 					{
@@ -87,17 +92,18 @@ namespace InferenceEngine
 					}
 
 				}
-				//If the left side contains one fact, find the corresponding boolean value for this world.
+				//If the left side contains one fact, find the corresponding boolean value for the current row.
 				else
 				{
 					left = row[facts.IndexOf(clauseFacts[0])];
 				}
-
+				//if left facts don't entail right fact, this row isn't entailed by the knowlege base.
 				if (!(!left | right))
 				{
 					return false;
 				}
 			}
+			//If left facts entail right fact for all entries in the row, then this row is entailed by the knowlege base
 			return true;
 		}
 
@@ -108,7 +114,10 @@ namespace InferenceEngine
 			bool alpha = row[facts.IndexOf(question)];
 			return false;
 		}
-
+		
+		/*
+		* TODO: Finish This
+		*/
 		public override string Infer()
 		{
 			//Foreach node in KB.iterateOverAllModels() do
