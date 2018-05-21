@@ -8,10 +8,11 @@ namespace InferenceEngine
 {
 	class ForwardChaining : InferenceEngine
 	{
-		public override string Infer()
+        //TODO: create an array for holding the
+		public override bool Infer()
 		{
-			//TODO: Finish This
-			return "Forward Chaining";
+            //TODO: Finish This
+            return false;
 		}
 
 		public ForwardChaining(string input) : base(input)

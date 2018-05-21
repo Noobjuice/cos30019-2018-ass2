@@ -10,9 +10,11 @@ namespace InferenceEngine
 	{
 		protected char question;
 		int counter = 0;
-		public abstract string Infer();
-		protected string[] ask;
+		public abstract bool Infer();
+        protected string[] ask;
+        protected List<String> askList;
 		protected string tell;
+
 
 		public void fileIn(string fileName)
 		{
@@ -31,6 +33,10 @@ namespace InferenceEngine
 						//Remove the trailing semicolon and convert to an array.
 						line = line.TrimEnd(line[line.Length - 1]);
 						ask = line.Split(';');
+                        for (int i = 0; i < ask.Length; i++)
+                        {
+                            askList.Add(ask[i]);
+                        }
 						break;
 
 					//ASK

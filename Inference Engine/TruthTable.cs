@@ -8,10 +8,10 @@ namespace InferenceEngine
 {
 	class TruthTable : InferenceEngine
 	{
-		public override string Infer()
+		public override bool Infer()
 		{
 			//TODO: Finish This
-			return "Truth Table";
+			return false;
 		}
 
 		public TruthTable(string input) : base(input)

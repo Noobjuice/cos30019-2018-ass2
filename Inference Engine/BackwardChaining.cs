@@ -23,10 +23,10 @@ namespace InferenceEngine
 			return result;
 		}
 
-		public override string Infer()
+		public override bool Infer()
 		{
 			//TODO: Finish This
-			return outputResult();
+			return false;
 		}
 
 		public BackwardChaining(string input) : base(input)
