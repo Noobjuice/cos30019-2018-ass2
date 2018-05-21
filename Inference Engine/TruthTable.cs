@@ -15,48 +15,45 @@ namespace InferenceEngine
 		private List<String> colHeadings;   //A list of all the facts, including ones that are part of clauses
 		private List<String> alphaClauses = new List<string>();
 
-		//Calculate truth table row
-		//TODO: Figure out why it's giving a list of 3-5 results instead of always 4.
-
 		/*
 		* Adds all the facts in the clauses list to the facts list
 		*/
 		private void getColHeaders()
 		{
-			string[] clauseFacts;   //Holds the facts in each clause
-			string[] leftFacts;     //Holds the facts in the left side of the clause (if there's more than one fact)
+			string[] clauseLiterals;   //Holds the facts in each clause
+			string[] leftLiterals;     //Holds the facts in the left side of the clause (if there's more than one fact)
 
 			//Go through all clauses and extract facts
 			foreach (string clause in clauses)
 			{
 				//Get an array of facts from the clause
-				clauseFacts = clause.Split(
+				clauseLiterals = clause.Split(
 					new[] { "=>" },
 					StringSplitOptions.RemoveEmptyEntries
 					);
 
 				//Add right fact
-				addColHeader(clauseFacts[1]);
+				addColHeader(clauseLiterals[1]);
 
 				//If multiple facts on left side of clause, extract each one and add to list of facts
-				if (clauseFacts[0].Contains("&"))
+				if (clauseLiterals[0].Contains("&"))
 				{
 					//Extract each fact
-					leftFacts = clauseFacts[0].Split(
+					leftLiterals = clauseLiterals[0].Split(
 					new[] { "&" },
 					StringSplitOptions.RemoveEmptyEntries
 					);
 
 					//Add each fact to the list
-					for (int i = 0; i < clauseFacts.Length; i++)
+					for (int i = 0; i < clauseLiterals.Length; i++)
 					{
-						addColHeader(leftFacts[i]);
+						addColHeader(leftLiterals[i]);
 					}
 				}
 				//If only one fact on left side, add to facts list
 				else
 				{
-					addColHeader(clauseFacts[0]);
+					addColHeader(clauseLiterals[0]);
 				}
 			}
 		}
@@ -88,20 +85,20 @@ namespace InferenceEngine
 		*/
 		private void GetAlphaClauses()
 		{
-			string[] clauseFacts;   //Holds all the facts in the clause
-			string[] leftFacts;     //Holds the facts on the left side of the clause (if more than one)
+			string[] clauseLiterals;   //Holds all the facts in the clause
+			string[] leftLiterals;     //Holds the facts on the left side of the clause (if more than one)
 
 			foreach (string clause in clauses)
 			{
 
 				//Break clause into facts
-				clauseFacts = clause.Split(
+				clauseLiterals = clause.Split(
 					new[] { "=>" },
 					StringSplitOptions.RemoveEmptyEntries
 					);
 
 				//Check if right side of clause contains question
-				if (question == clauseFacts[1])
+				if (question == clauseLiterals[1])
 				{
 					alphaClauses.Add(clause);
 				}
@@ -109,15 +106,15 @@ namespace InferenceEngine
 				else
 				{
 					//If left side has multiple facts, check them all
-					if (clauseFacts[0].Contains('&'))
+					if (clauseLiterals[0].Contains('&'))
 					{
-						leftFacts = clauseFacts[0].Split(
+						leftLiterals = clauseLiterals[0].Split(
 							new[] { "&" },
 							StringSplitOptions.RemoveEmptyEntries
 							);
-						for (int i = 0; i < clauseFacts.Length; i++)
+						for (int i = 0; i < clauseLiterals.Length; i++)
 						{
-							if (question == leftFacts[i])
+							if (question == leftLiterals[i])
 							{
 								alphaClauses.Add(clause);
 								break;
@@ -127,7 +124,7 @@ namespace InferenceEngine
 					//If the left side contains one fact, check if it's the question
 					else
 					{
-						if (question == clauseFacts[1])
+						if (question == clauseLiterals[1])
 						{
 							alphaClauses.Add(clause);
 						}
@@ -182,35 +179,35 @@ namespace InferenceEngine
 		{
 			bool left = true;       //Used to store result of left side of clause
 			bool right = true;      //Used to store result of right side of clause
-			string[] clauseFacts;   //Holds all the facts in the clause
-			string[] leftFacts;     //Holds the facts on the left side of the clause (if more than one)
+			string[] clauseLiterals;   //Holds all the facts in the clause
+			string[] leftLiterals;     //Holds the facts on the left side of the clause (if more than one)
 
 			//Break clause into facts
-			clauseFacts = clause.Split(
+			clauseLiterals = clause.Split(
 				new[] { "=>" },
 				StringSplitOptions.RemoveEmptyEntries
 				);
 
 			//Get corresponding boolean values for facts
-			right = row[colHeadings.IndexOf(clauseFacts[1])];
+			right = row[colHeadings.IndexOf(clauseLiterals[1])];
 			//If left side contains more than one fact, combine all corresponding boolean values
-			if (clauseFacts[0].Contains('&'))
+			if (clauseLiterals[0].Contains('&'))
 			{
-				leftFacts = clauseFacts[0].Split(
+				leftLiterals = clauseLiterals[0].Split(
 					new[] { "&" },
 					StringSplitOptions.RemoveEmptyEntries
 					);
 
-				for (int i = 0; i < leftFacts.Length; i++)
+				for (int i = 0; i < leftLiterals.Length; i++)
 				{
-					left = left && row[colHeadings.IndexOf(leftFacts[i])];
+					left = left && row[colHeadings.IndexOf(leftLiterals[i])];
 				}
 
 			}
 			//If the left side contains one fact, find the corresponding boolean value for the current row.
 			else
 			{
-				left = row[colHeadings.IndexOf(clauseFacts[0])];
+				left = row[colHeadings.IndexOf(clauseLiterals[0])];
 			}
 
 			//Perform the implication (changed using De Morgan's law)
@@ -248,19 +245,24 @@ namespace InferenceEngine
 		*/
 		private bool testAlpha(List<bool> row)
 		{
-			bool alphaVal = row[colHeadings.IndexOf(question)];
+			//bool alphaVal = row[colHeadings.IndexOf(question)];
 
 			//TODO: Check if Alpha is a fact
 			//TODO: Figure out how to test for alpha properly
 
-			//Check
-			foreach (string clause in alphaClauses)
+			//Check if alpha is entailed in this row
+			if (! row[colHeadings.IndexOf(question)])
 			{
+				return false;
+			}
+			/*foreach (string clause in alphaClauses)
+			{
+				//if (!(solveClause(clause, row) && alphaVal))
 				if (!(solveClause(clause, row) && alphaVal))
 				{
 					return false;
 				}
-			}
+			}*/
 			return true;
 		}
 		
@@ -270,12 +272,14 @@ namespace InferenceEngine
 		public override string Infer()
 		{
 			//Check if question is in knowlege base
-			
+			bool rowIsTrue = true;
+			List<bool> row;
 
 			//Foreach node in KB.iterateOverAllModels() do
 			for (int i = 0; i < rowCount; i++)
 			{
-				List<bool> row = getRow(i);
+				row = getRow(i);
+				
 
 				//If Test (n, KB) true
 				if (testKB(row))
@@ -285,10 +289,10 @@ namespace InferenceEngine
 					{
 						count++;
 					}
-					/*else
+					else
 					{
 						return "NO";
-					}*/
+					}
 				}
 			}
 			return "YES " + count;
