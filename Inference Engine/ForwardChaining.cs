@@ -45,9 +45,26 @@ namespace InferenceEngine
                     agenda.Add(ask[i]);
                 }
             }
-            foreach (String str in clauses)
+        }
+
+        public bool containsSymbolInPremise(String clause, String symbol)
+        {
+            //Separate the implication into premise and head
+            String[] separator = { "=>" };
+            String[] components = clause.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+            String premise = components[0];
+            String head = components[1];
+            if (premise.Contains("&"))
             {
-                Console.WriteLine(str);
+                //if the premise contains two symbols then separate it and then check against symbol
+                String[] symbols = premise.Split('&');
+                //check the symbols against the given symbol
+                return symbol.Contains(symbol);
+            }
+            else
+            {
+                //else return if the symbol matches the premise
+                return premise.Contains(symbol);
             }
         }
 

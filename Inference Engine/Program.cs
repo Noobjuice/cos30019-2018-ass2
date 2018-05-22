@@ -16,7 +16,7 @@ namespace InferenceEngine
 			//TODO: Revert this back (makes testing easier)
 			//string method = arguments[1];
 			//string filename = arguments[2];
-			string method = "TT";
+			string method = "FC";
 			string filename = "test1(2).txt";
 
 			InferenceEngine IE;
