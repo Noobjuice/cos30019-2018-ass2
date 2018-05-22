@@ -29,7 +29,12 @@ namespace InferenceEngine
 			return false;
 		}
 
-		public BackwardChaining(string input) : base(input)
+        public override string getPath()
+        {
+            return "path";
+        }
+
+        public BackwardChaining(string input) : base(input)
 		{
 			//TODO: Finish This
 		}

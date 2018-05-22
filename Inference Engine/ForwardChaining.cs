@@ -27,11 +27,23 @@ namespace InferenceEngine
 
 		}
 
+        public override string getPath()
+        {
+            //this method outputs the path to the goal
+            String output = "";
+            for (int i = 0; i < inferred.Count; i++)
+            {
+                output += inferred[i] + ",";
+            }
+            return output += tell;
+        }
+
         protected void initializeValues()
         {
             for (int i = 0; i < ask.Length; i++)
             {
                 //check if it is an implication else add it as a fact
+                ask[i] = ask[i].Trim();
                 if (ask[i].Contains("=>"))
                 {
                     //add this clause
@@ -58,7 +70,7 @@ namespace InferenceEngine
                 //if the premise contains two symbols then separate it and then check against symbol
                 String[] symbols = premise.Split('&');
                 //check the symbols against the given symbol
-                return symbol.Contains(symbol);
+                return symbols.Contains(symbol);
             }
             else
             {
@@ -71,6 +83,10 @@ namespace InferenceEngine
         {
             String[] separator = { "=>" };
             string[] components = clause.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+            for (int i = 0; i < components.Length; i++)
+            {
+                components[i] = components[i].Trim();
+            }
             return components;
         }
 
@@ -81,7 +97,6 @@ namespace InferenceEngine
             {
                 //get the first fact to process through the clauses
                 String symbol = agenda[0];
-                Console.WriteLine(symbol);
                 //pop the item of the list
                 agenda.RemoveAt(0);
                 //Add this to inferred list as this symbol is being processed
@@ -91,19 +106,16 @@ namespace InferenceEngine
                 {
                     return true;
                 }
-                foreach (String clause in clauses)
+                for (int i = 0; i < clauses.Count; i++)
                 {
-                    Console.WriteLine(clause);
-                    int i = 0;
                     //check if the symbol exist within any premise among all clauses in knowledge base
-                    if (containsSymbolInPremise(clause, symbol))
+                    if (containsSymbolInPremise(clauses[i], symbol))
                     {
                         //if yes then deduct the count by 1 and if the count is equal to 0 then add the head of the implication to the agenda
                         count[i] = count[i] - 1;
                         if (count[i] == 0)
                         {
-                            Console.WriteLine("One premise completed");
-                            String[] components = DifferentiateComponents(clause);
+                            String[] components = DifferentiateComponents(clauses[i]);
                             String head = components[1];
                             //check again if the head matches the query
                             if (head.Equals(tell))
@@ -113,7 +125,6 @@ namespace InferenceEngine
                             agenda.Add(head);
                         }
                     }
-                    i++;
                 }
             }
             return false;

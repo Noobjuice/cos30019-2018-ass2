@@ -13,8 +13,12 @@ namespace InferenceEngine
 			//TODO: Finish This
 			return false;
 		}
+        public override string getPath()
+        {
+            return "path";
+        }
 
-		public TruthTable(string input) : base(input)
+        public TruthTable(string input) : base(input)
 		{
 			//TODO: Finish This
 		}

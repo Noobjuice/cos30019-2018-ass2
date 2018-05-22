@@ -11,6 +11,7 @@ namespace InferenceEngine
 		protected char question;
 		int counter = 0;
 		public abstract bool Infer();
+        public abstract string getPath();
         protected string[] ask;
         protected string[] premises;
         protected List<String> symbols;
