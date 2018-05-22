@@ -13,17 +13,8 @@ namespace InferenceEngine
 
 		protected string question;
 		public abstract string Infer();
-		private int lineCount;
-		//protected string[] ask;
-		//protected string tell;
-
-
-	    int counter = 0;
+        private int lineCount;
 		public abstract string getPath();
-		protected string[] ask;
-		protected string[] premises;
-		protected List<String> symbols;
-		protected string tell;
 
 		public void fileIn(string fileName)
 		{

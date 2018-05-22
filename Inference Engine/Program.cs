@@ -47,9 +47,13 @@ namespace InferenceEngine
 			//If Inference Engine Initiated, get results
 			if (IE != null)
 			{
-                if (IE.Infer())
+                if (IE.Infer() == "true")
                 {
-                    Console.WriteLine(IE.getPath());
+                    Console.WriteLine("YES:" + IE.getPath());
+                }
+                else
+                {
+                    Console.WriteLine("NO");
                 }
 				Console.ReadLine();
 			}

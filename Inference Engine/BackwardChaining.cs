@@ -23,10 +23,10 @@ namespace InferenceEngine
 			return result;
 		}
 
-		public override bool Infer()
+		public override string Infer()
 		{
 			//TODO: Finish This
-			return false;
+			return "false";
 		}
 
         public override string getPath()
