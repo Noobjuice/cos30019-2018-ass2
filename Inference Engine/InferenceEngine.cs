@@ -12,7 +12,8 @@ namespace InferenceEngine
 		int counter = 0;
 		public abstract bool Infer();
         protected string[] ask;
-        protected List<String> askList;
+        protected string[] premises;
+        protected List<String> symbols;
 		protected string tell;
 
 
@@ -31,12 +32,9 @@ namespace InferenceEngine
 					//TELL
 					case 1:
 						//Remove the trailing semicolon and convert to an array.
+                        //TODO: remove whitespace between symbols
 						line = line.TrimEnd(line[line.Length - 1]);
 						ask = line.Split(';');
-                        for (int i = 0; i < ask.Length; i++)
-                        {
-                            askList.Add(ask[i]);
-                        }
 						break;
 
 					//ASK
@@ -50,7 +48,6 @@ namespace InferenceEngine
 			//Close the File when finished
 			file.Close();
 		}
-
 		public InferenceEngine(string filename)
 		{
 			fileIn(filename);
