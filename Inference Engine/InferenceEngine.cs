@@ -17,13 +17,21 @@ namespace InferenceEngine
 		//protected string[] ask;
 		//protected string tell;
 
+
+	    int counter = 0;
+		public abstract string getPath();
+		protected string[] ask;
+		protected string[] premises;
+		protected List<String> symbols;
+		protected string tell;
+
 		public void fileIn(string fileName)
 		{
 			System.IO.StreamReader file = new System.IO.StreamReader(fileName);
 			string line;    //Holds current line from the file
 
 			//TODO: Change this to work off the content of the prevous line, not the line number.
-			// Read the file line by line.  
+			// Read the file line by line.
 			while ((line = file.ReadLine()) != null)
 			{
 				//Get relevent data from lines 1 and 4 (starting from 0)
@@ -63,7 +71,6 @@ namespace InferenceEngine
 			//Close the File when finished
 			file.Close();
 		}
-
 		public InferenceEngine(string filename)
 		{
 			fileIn(filename);

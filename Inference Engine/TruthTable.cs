@@ -265,7 +265,7 @@ namespace InferenceEngine
 			}*/
 			return true;
 		}
-		
+
 		/*
 		* TODO: Finish This
 		*/
@@ -279,7 +279,7 @@ namespace InferenceEngine
 			for (int i = 0; i < rowCount; i++)
 			{
 				row = getRow(i);
-				
+
 
 				//If Test (n, KB) true
 				if (testKB(row))
@@ -297,8 +297,12 @@ namespace InferenceEngine
 			}
 			return "YES " + count;
 		}
+        public override string getPath()
+        {
+            return "path";
+        }
 
-		public TruthTable(string input) : base(input)
+        public TruthTable(string input) : base(input)
 		{
 			colHeadings = new List<string>(facts);
 			getColHeaders();

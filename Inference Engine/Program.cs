@@ -17,11 +17,8 @@ namespace InferenceEngine
 			//TODO: Revert this back (makes testing easier)
 			//string method = arguments[1];
 			//string filename = arguments[2];
-
-			//TODO: Delete this
-			string method = "TT";
-			//Name of the test file (test1.txt, test2.txt)
-			string filename = "test1.txt";
+			string method = "FC";
+			string filename = "test1(2).txt";
 
 			InferenceEngine IE;
 
@@ -31,11 +28,11 @@ namespace InferenceEngine
 			switch (method)
 			{
 				//Truth Table checking
-				case "TT":  
+				case "TT":
 					IE = new TruthTable(filename);
 					break;
 				//Forward Chaining
-				case "FC":  
+				case "FC":
 					IE = new ForwardChaining(filename);
 					break;
 				//Backward Chaining
@@ -50,7 +47,10 @@ namespace InferenceEngine
 			//If Inference Engine Initiated, get results
 			if (IE != null)
 			{
-				Console.WriteLine(IE.Infer());
+                if (IE.Infer())
+                {
+                    Console.WriteLine(IE.getPath());
+                }
 				Console.ReadLine();
 			}
 		}
