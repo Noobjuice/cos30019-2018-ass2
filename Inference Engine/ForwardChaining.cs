@@ -11,7 +11,6 @@ namespace InferenceEngine
         List<String> inferred; //this list contains the premises that are inferred
         List<String> agenda;    //this list contains the symbols that are not yet processed.
         List<int> count;		//this contains the occurance of a premise within all implications
-        List<string> symbolsEntailed; //this contains the flow of symbols that lead to the query
 
 
 		public ForwardChaining(string input) : base(input)
@@ -20,7 +19,6 @@ namespace InferenceEngine
             inferred = new List<string>();
             agenda = new List<string>();
             count = new List<int>();
-            symbolsEntailed = new List<string>();
             initializeValues();
 
 		}

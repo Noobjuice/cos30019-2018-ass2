@@ -8,7 +8,35 @@ Features/Bugs/Missing
 		1) User shall be able to test if q is entailed from KB.
 		2) User can access the program with the help of a bash file.
 		3) Forward Chaining method helps the user to find the query from the given facts.
+			-The way forward chaining works is by reading the input file which contains a question, clauses and facts.
+			-The program intelligently splits the content of the file between facts, clauses and question.
+			-The facts are stored in facts list, clauses in clauses list and question as question variable.
+			-To incorporate the flow of program lists such as agenda, inferred and count are created.
+			-Agenda stores the symbol that need to be processed and check against premises of clauses checking if they match.
+			-Inferred is the list that contains symbols which are popped from agenda so that we can track the flow to the
+			 result and avoid duplication.
+			-Count is the list that stores the integer which represents the number of symbols within a given premise of clause,
+			 let's say p & q => r has two count value as there are two symbols in the premise. This list helps to make sure 
+			 that when all the symbols in the premise are processed we can store the result of clause in the agenda and process
+			 it.
+			-The program starts by initiating all the values with their respective values and taking each fact and matching 
+			 it with any of the premise of clauses, if it does it stores the result of clause in agenda and conitnues until
+			 symbol matching the question is achieved or stored in agenda.
+
 		4) Backward Chaining can be used to prove query by backtracking through given clauses to reach the fact.
+			-The way forward chaining works is by reading the input file which contains a question, clauses and facts.
+			-The program intelligently splits the content of the file between facts, clauses and question.
+			-The facts are stored in facts list, clauses in clauses list and question as question variable.
+			-To incorporate the flow of program lists such as agenda, inferred and count are created.
+			-Agenda stores the symbol that need to be processed and check against premises of clauses checking if they match.
+			-Inferred is the list that contains symbols which are popped from agenda so that we can track the flow to the
+			 result and avoid duplication.
+			-The program in backward chaining flows by initiating lists with their respective values and instead of 
+			 starting from fact it now starts with question and starts matching the result of each clause with the question,
+			 if it matches than the symbols in premise are added to the agenda but before adding them it is made sure that 
+			 they are already not in agenda and have not been processed before. The process keeps on repeating for each clause
+			 until a fact is added to agenda which makes the whole clauses true as facts are true hence acheiving the
+			 objective.
 	Bugs:
 	Missing:
 
