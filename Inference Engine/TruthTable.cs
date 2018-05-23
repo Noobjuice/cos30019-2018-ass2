@@ -271,9 +271,25 @@ namespace InferenceEngine
 		*/
 		public override bool Infer()
 		{
-			//Check if question is in knowlege base
 			bool rowIsTrue = true;
 			List<bool> row;
+			bool alphaInKB = false;
+
+			//Check if the alpha literal is contained somewhere in the knowlege base
+			foreach (string s in colHeadings)
+			{
+				if (s == question)
+				{
+					alphaInKB = true;
+					break;
+				}
+			}
+
+			//If alpha isn't in any of the knowlege base clauses, end the search now.
+			if (!alphaInKB)
+			{
+				return false;
+			}
 
 			//Foreach node in KB.iterateOverAllModels() do
 			for (int i = 0; i < rowCount; i++)

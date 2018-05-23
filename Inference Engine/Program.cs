@@ -18,7 +18,7 @@ namespace InferenceEngine
 			string method = arguments[1];
 			string filename = arguments[2];
 			//string method = "BC";
-			//string filename = "test2.txt";
+			//string filename = "test8.txt";
 
 			InferenceEngine IE;
 

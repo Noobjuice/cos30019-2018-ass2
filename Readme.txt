@@ -1,7 +1,8 @@
 Student Details : 
 	1) Manan Rajpal (100864824)
-	2)James
-	//Please add Group number from ESP
+	2)James Goodricke (101082494)
+
+Team Number: COS30019_A02_T020
 
 Features/Bugs/Missing
 	Features:
@@ -37,7 +38,9 @@ Features/Bugs/Missing
 			 they are already not in agenda and have not been processed before. The process keeps on repeating for each clause
 			 until a fact is added to agenda which makes the whole clauses true as facts are true hence acheiving the
 			 objective.
+		5. The Truth Table method applies a brute-force algorithm to find the total number of “worlds” (represented as true rows in the truth table) that entail the question. If a row doesn’t entail a question, then it will return false. Otherwise, it will return the total number of entailed worlds.
 	Bugs:
+		- The truth table is not able to process knowledge bases with more than 30 literals in them. This is due to the limitations of the int32 datatype and the way the truth table rows are generated (essentially int32 cannot store numbers larger than 2^30, which is the equation used to generate the total number of columns in the table). Our testing was unable to find the upper limit of literals for forward and backward chaining (upwards of 5000 literals).
 	Missing:
 
 Test Cases:
@@ -60,16 +63,16 @@ Notes:
 Summary Report:
 	The team comprised of two members James and Manan who divided the responsibility among themselves.
 		- James
-			- Created basic skeleton of the program.
-			- Added code for reading content from the file.
+			- Designed the program structure 
+			- Implemented the inference engine and program classes.
+			- Implemented the truth table class
 			- Worked on the read me file and gave input.
-			- Implemented the whole truth table method.
 		- Manan	
 			- Modified some code in the basic skeleton of how the output is returned to the main class and shown on console.
-			- Implemented the whole Forward Chaining.
-			- Implemented the whole Backward Chaining.
-			- Created half of the readme file.
+			- Implemented the Forward Chaining.
+			- Implemented the Backward Chaining.
+			- Created most of the readme file.
 
 	Both members regulary met in person to discuss the update made by each and to understand if someone is going the wrong way.
 	To communicated out of regular hours, facebook was used to update and ask for help if stuck on any part of the program where both
-	readily helped each other throughout the implication of the assignment. 
+	readily helped each other throughout the implication of the assignment.
