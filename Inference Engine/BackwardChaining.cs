@@ -35,7 +35,7 @@ namespace InferenceEngine
             return symbols;
         }
 
-        public override string Infer()
+        public override bool Infer()
 		{
             while (agenda.Count != 0)
             {
@@ -96,7 +96,7 @@ namespace InferenceEngine
                     {
                         //As there were no clauses which had a conclusion same as question
                         //there is no possible solution for it
-                        return "false";
+                        return false;
                     }
                     else
                     {
@@ -116,10 +116,10 @@ namespace InferenceEngine
                     }
                 }
             }
-			return "true";
+			return true;
 		}
 
-        public override string getPath()
+        public override string getResult()
         {
             inferred.Reverse();
             String output = "";

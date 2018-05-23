@@ -23,7 +23,7 @@ namespace InferenceEngine
 
 		}
 
-        public override string getPath()
+        public override string getResult()
         {
             //this method outputs the path to the goal
             String output = "";
@@ -79,7 +79,7 @@ namespace InferenceEngine
             return components;
         }
 
-        public override string Infer()
+        public override bool Infer()
         {
             //TODO: Finish This
             while (agenda.Count != 0)
@@ -93,7 +93,7 @@ namespace InferenceEngine
                 //check if the fact matches the query
                 if (symbol == question)
                 {
-                    return "true";
+                    return true;
                 }
                 for (int i = 0; i < clauses.Count; i++)
                 {
@@ -109,14 +109,14 @@ namespace InferenceEngine
                             //check again if the head matches the query
                             if (head.Equals(question))
                             {
-                                return "true";
+                                return true;
                             }
                             agenda.Add(head);
                         }
                     }
                 }
             }
-            return "false";
+            return false;
         }
     }
 }

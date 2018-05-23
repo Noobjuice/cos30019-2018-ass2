@@ -15,10 +15,10 @@ namespace InferenceEngine
 
 
 			//TODO: Revert this back (makes testing easier)
-			//string method = arguments[1];
-			//string filename = arguments[2];
-			string method = "BC";
-			string filename = "test1(2).txt";
+			string method = arguments[1];
+			string filename = arguments[2];
+			//string method = "BC";
+			//string filename = "test2.txt";
 
 			InferenceEngine IE;
 
@@ -47,9 +47,9 @@ namespace InferenceEngine
 			//If Inference Engine Initiated, get results
 			if (IE != null)
 			{
-                if (IE.Infer() == "true")
+                if (IE.Infer() == true)
                 {
-                    Console.WriteLine("YES: " + IE.getPath());
+                    Console.WriteLine("YES: " + IE.getResult());
                 }
                 else
                 {

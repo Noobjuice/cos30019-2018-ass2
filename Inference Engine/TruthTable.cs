@@ -269,7 +269,7 @@ namespace InferenceEngine
 		/*
 		* TODO: Finish This
 		*/
-		public override string Infer()
+		public override bool Infer()
 		{
 			//Check if question is in knowlege base
 			bool rowIsTrue = true;
@@ -291,15 +291,15 @@ namespace InferenceEngine
 					}
 					else
 					{
-						return "NO";
+						return false;
 					}
 				}
 			}
-			return "YES " + count;
+			return true;
 		}
-        public override string getPath()
+        public override string getResult()
         {
-            return "path";
+            return count.ToString();
         }
 
         public TruthTable(string input) : base(input)

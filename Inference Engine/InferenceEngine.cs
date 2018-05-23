@@ -12,9 +12,9 @@ namespace InferenceEngine
 		protected List<String> clauses = new List<String>();
 
 		protected string question;
-		public abstract string Infer();
+		public abstract bool Infer();
         private int lineCount;
-		public abstract string getPath();
+		public abstract string getResult();
 
 		public void fileIn(string fileName)
 		{
