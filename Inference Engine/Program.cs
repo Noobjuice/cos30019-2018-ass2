@@ -55,7 +55,6 @@ namespace InferenceEngine
                 {
                     Console.WriteLine("NO");
                 }
-				Console.ReadLine();
 			}
 		}
 	}
