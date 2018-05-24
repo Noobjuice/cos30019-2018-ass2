@@ -8,90 +8,71 @@ namespace InferenceEngine
 {
 	abstract class InferenceEngine
 	{
-		protected List<String> facts = new List<String>();
-		protected List<String> clauses = new List<String>();
+		protected List<String> facts = new List<String>();		//List of all facts in the knowlege base
+		protected List<String> clauses = new List<String>();    //List of all clauses in the knowlege base
+		protected string question;                              //Question being asked (alpha)
 
-		protected string question;
-		public abstract bool Infer();
-        private int lineCount;
-		public abstract string getResult();
+		public abstract bool Infer();			//Checks if KB entails Alpha	
+		public abstract string getResult();     //Prints the answer of KB entailing alpha
 
+		/*
+		* Gets the knowlege base and question from file
+		* @fileName: The name of the file to read from
+		*/
 		public void fileIn(string fileName)
 		{
-			System.IO.StreamReader file = new System.IO.StreamReader(fileName);
-			string line;    //Holds current line from the file
-			string previousLine = "";	//Holds the previous line in the file.
+			string line;				//Holds current line from the file
+			string previousLine = "";   //Holds the previous line in the file.
 
-			//TODO: Change this to work off the content of the prevous line, not the line number.
+			//Streamer for reading from file
+			System.IO.StreamReader file = new System.IO.StreamReader(fileName);
+
 			// Read the file line by line.
 			while ((line = file.ReadLine()) != null)
 			{
+				//Get List of clauses and facts
 				if (previousLine == "TELL")
 				{
-					//Remove the trailing semicolon and convert to an array.
-					line = line.TrimEnd(line[line.Length - 1]);
+					//Remove the spaces and trailing semicolon.
 					line = line.Replace(" ", "");
+					line = line.TrimEnd(line[line.Length - 1]);
+
+					//Convert line into an array of clauses and facts
 					string[] splitLine = line.Split(';');
 
-					//TODO: Finish this
+					//Add all the clauses and facts to their respective lists
 					for (int i = 0; i < splitLine.Length; i++)
 					{
+						//If the line contains "=>" add to clauses
 						if (splitLine[i].Contains("=>") == false)
 						{
 							facts.Add(splitLine[i]);
 						}
 
+						//If the line doesn't contains "=>", add to facts
 						else
 						{
 							clauses.Add(splitLine[i]);
 						}
 					}
 				}
+
+				//Get question from file
 				else if (previousLine == "ASK")
 				{
 					question = line;
 				}
 
+				//Save the current line, so it can be used to check the next line
 				previousLine = line;
-				//Get relevent data from lines 1 and 4 (starting from 0)
-				/*switch (lineCount)
-				{
-					//TELL
-					case 1:
-						//Remove the trailing semicolon and convert to an array.
-
-						line = line.TrimEnd(line[line.Length - 1]);
-						line = line.Replace(" ", "");
-						string[] splitLine = line.Split(';');
-
-						//TODO: Finish this
-						for (int i=0; i<splitLine.Length; i++){
-							if (splitLine[i].Contains("=>") == false)
-							{
-								facts.Add(splitLine[i]);
-							}
-
-							else
-							{
-								clauses.Add(splitLine[i]);
-							}
-						}
-						break;
-
-					//ASK
-					case 3:
-						//tell = line;
-						question = line;
-						break;
-				}
-				lineCount++;*/
 			}
 
-			//Close the File when finished
+			//Close the File IO stream when finished
 			file.Close();
 		}
 		public InferenceEngine(string filename)
 		{
+			//Get Knowlege base and question from file
 			fileIn(filename);
 		}
 	}

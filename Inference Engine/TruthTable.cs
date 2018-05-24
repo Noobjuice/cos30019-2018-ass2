@@ -8,111 +8,127 @@ namespace InferenceEngine
 {
 	class TruthTable : InferenceEngine
 	{
-		private int count = 0;      //Total rows entailed by knowlege base
-		private int rowCount;       //Number of rows in the truth table
-		private int columnCount;    //Number of collumns in the truth table
+		private int count = 0;      //Total rows entailed by knowledge base
+		private Int64 rowCount;		//Number of rows in the truth table
+		private int columnCount;    //Number of columns in the truth table
 
-		private List<String> colHeadings;   //A list of all the facts, including ones that are part of clauses
-		private List<String> alphaClauses = new List<string>();
+		private List<String> colHeadings;   //List of all the literals, including ones that are part of clauses
+		private List<String> alphaClauses = new List<string>(); //List of all the clauses that contain the question (alpha).
+
+		/*
+		* Gets the value of a boolean for a coresponding literal in the truth table
+		* @columnHeading: The literal being searched for
+		* @row: the current row in the truth table
+		*/
+		private bool getRowValue(string columnHeading, List<bool> row)
+		{
+			return row[colHeadings.IndexOf(columnHeading)];
+		}
 
 		/*
 		* Adds all the facts in the clauses list to the facts list
 		*/
-		private void getColHeaders()
+		private void getColHeadings()
 		{
-			string[] clauseLiterals;   //Holds the facts in each clause
+			string[] splitClause;      //Holds the left and right side of the clause after they're split on
 			string[] leftLiterals;     //Holds the facts in the left side of the clause (if there's more than one fact)
+			
+			//Make a new list of facts to add the clause literals to
+			colHeadings = new List<string>(facts);
 
 			//Go through all clauses and extract facts
 			foreach (string clause in clauses)
 			{
 				//Get an array of facts from the clause
-				clauseLiterals = clause.Split(
+				splitClause = clause.Split(
 					new[] { "=>" },
 					StringSplitOptions.RemoveEmptyEntries
 					);
 
-				//Add right fact
-				addColHeader(clauseLiterals[1]);
+				//Add literal from the right of the clause
+				addColHeader(splitClause[1]);
 
-				//If multiple facts on left side of clause, extract each one and add to list of facts
-				if (clauseLiterals[0].Contains("&"))
+				//If there are multiple literals on left side of clause, extract each one and add to list of literals
+				if (splitClause[0].Contains("&"))
 				{
-					//Extract each fact
-					leftLiterals = clauseLiterals[0].Split(
+					//Extract each literal
+					leftLiterals = splitClause[0].Split(
 					new[] { "&" },
 					StringSplitOptions.RemoveEmptyEntries
 					);
 
-					//Add each fact to the list
-					for (int i = 0; i < clauseLiterals.Length; i++)
+					//Add each literal to the list
+					for (int i = 0; i < splitClause.Length; i++)
 					{
 						addColHeader(leftLiterals[i]);
 					}
 				}
-				//If only one fact on left side, add to facts list
+				//If only one literal on left side, add to literals list
 				else
 				{
-					addColHeader(clauseLiterals[0]);
+					addColHeader(splitClause[0]);
 				}
 			}
 		}
 
 		/*
-		 * Adds a single fact to the facts list if it isn't already in the list.
-		 * @fact: the fact to be added
+		 * Adds a single literal to the literals list if it isn't already present in the list.
+		 * @literal: the literal to be added
 		*/
-		private void addColHeader(string fact)
+		private void addColHeader(string literal)
 		{
-			bool inList = false;    //Used to determine if fact is already in list
-			//If fact isn't in facts list, add it
-			foreach (string f in colHeadings)
+			bool inList = false;    //Used to determine if literal is already in list
+			
+			//Check if the literal is already in the list
+			foreach (string l in colHeadings)
 			{
-				if (fact == f)
+				if (l == literal)
 				{
 					inList = true;
 					break;
 				}
 			}
+			//If literal isn't in the list, add it
 			if (!inList)
 			{
-				colHeadings.Add(fact);
+				colHeadings.Add(literal);
 			}
 		}
 
 		/*
-		* TODO: Finish This
+		* Creates a list of all the clauses that have the question (alpha) in them.
 		*/
 		private void GetAlphaClauses()
 		{
-			string[] clauseLiterals;   //Holds all the facts in the clause
-			string[] leftLiterals;     //Holds the facts on the left side of the clause (if more than one)
+			string[] splitClause;		//Holds the left and right side of the clause after they're split on "=>"
+			string[] leftLiterals;     //Holds the literals on the literals side of the clause (if more than one)
 
+			//Check all the clauses
 			foreach (string clause in clauses)
 			{
 
 				//Break clause into facts
-				clauseLiterals = clause.Split(
+				splitClause = clause.Split(
 					new[] { "=>" },
 					StringSplitOptions.RemoveEmptyEntries
 					);
 
 				//Check if right side of clause contains question
-				if (question == clauseLiterals[1])
+				if (question == splitClause[1])
 				{
 					alphaClauses.Add(clause);
 				}
 				//Check if left side of clause contains question
 				else
 				{
-					//If left side has multiple facts, check them all
-					if (clauseLiterals[0].Contains('&'))
+					//If left side has multiple literals, check them all
+					if (splitClause[0].Contains('&'))
 					{
-						leftLiterals = clauseLiterals[0].Split(
-							new[] { "&" },
-							StringSplitOptions.RemoveEmptyEntries
-							);
-						for (int i = 0; i < clauseLiterals.Length; i++)
+						//Split the left side of the clause into multiple literals
+						leftLiterals = splitClause[0].Split(new[] { "&" }, StringSplitOptions.RemoveEmptyEntries);
+
+						//Check all literals to see if they contain the question
+						for (int i = 0; i < splitClause.Length; i++)
 						{
 							if (question == leftLiterals[i])
 							{
@@ -121,10 +137,10 @@ namespace InferenceEngine
 							}
 						}
 					}
-					//If the left side contains one fact, check if it's the question
+					//If the left side contains one literal, check if that is the question
 					else
 					{
-						if (question == clauseLiterals[1])
+						if (question == splitClause[1])
 						{
 							alphaClauses.Add(clause);
 						}
@@ -134,146 +150,120 @@ namespace InferenceEngine
 		}
 
 		/*
-		* TODO: Finish This
+		* Generates each row in the truth table
+		* @rowNum: The current row number
 		*/
 		private List<bool> getRow(int rowNum)
 		{
-			List<bool> result = new List<bool>();
-			string rowNumStr;
-			char[] rowNumArray;
+			List<bool> result = new List<bool>();	//The results of the current row as a list of boolean values
+			string rowNumStr;						//The row number, converted to a string in binary.
+			char[] rowNumArray;                     //The binary string row number converted into a char array
 
 			//Convert the row number into a binary string
 			rowNumStr = Convert.ToString(rowNum, 2);
-			//TODO: Delete This
-			//rowNumStr.Reverse();
 
 			//Pad out the string with extra zeros
 			rowNumStr = rowNumStr.PadLeft(columnCount, '0');
 			rowNumArray = rowNumStr.ToCharArray();
 
-			//TODO: Delete this
-			//padding = new string('*', facts.Count - rowNumStr.Length);
-			//rowNumStr = rowNumStr.concat(padding);
-
 			//Generate the truth table row based on input
 			for (int i = 0; i < rowNumStr.Length; i++)
 			{
-
+				//If value in array is '1', add true to the result
 				if (rowNumArray[i] == '1')
 				{
 					result.Add(true);
 				}
+				//If value in array is '0', add true to the result
 				else
 				{
 					result.Add(false);
 				}
 			}
 
+			//Return the current row as a list of boolean values
 			return result;
 		}
 
 		/*
-		* TODO: Finish This
+		* Solves a clause using the current row in the truth table
+		* @clause: the clause to be solved
+		* @row: the current row in the truth table
 		*/
 		private bool solveClause(string clause, List<bool> row)
 		{
-			bool left = true;       //Used to store result of left side of clause
-			bool right = true;      //Used to store result of right side of clause
-			string[] clauseLiterals;   //Holds all the facts in the clause
-			string[] leftLiterals;     //Holds the facts on the left side of the clause (if more than one)
+			bool left = true;			//Used to store result of left side of clause
+			bool right = true;			//Used to store result of right side of clause
+			string[] clauseLiterals;	//Holds all the facts in the clause
+			string[] leftLiterals;		//Holds the facts on the left side of the clause (if more than one)
 
-			//Break clause into facts
-			clauseLiterals = clause.Split(
-				new[] { "=>" },
-				StringSplitOptions.RemoveEmptyEntries
-				);
+			//Split clause on the "=>"
+			clauseLiterals = clause.Split(new[] { "=>" }, StringSplitOptions.RemoveEmptyEntries);
 
-			//Get corresponding boolean values for facts
-			right = row[colHeadings.IndexOf(clauseLiterals[1])];
-			//If left side contains more than one fact, combine all corresponding boolean values
+			//Get corresponding boolean values for literals
+			right = getRowValue(clauseLiterals[1], row);
+
+			//If left side contains more than one literals, combine all corresponding boolean values
 			if (clauseLiterals[0].Contains('&'))
 			{
-				leftLiterals = clauseLiterals[0].Split(
-					new[] { "&" },
-					StringSplitOptions.RemoveEmptyEntries
-					);
+				//Extract each literal on the left side of the clause
+				leftLiterals = clauseLiterals[0].Split(new[] { "&" }, StringSplitOptions.RemoveEmptyEntries);
 
+				//
 				for (int i = 0; i < leftLiterals.Length; i++)
 				{
-					left = left && row[colHeadings.IndexOf(leftLiterals[i])];
+					left = left && getRowValue(leftLiterals[i], row);
 				}
 
 			}
-			//If the left side contains one fact, find the corresponding boolean value for the current row.
+			//If the left side contains one literals, find the corresponding boolean value.
 			else
 			{
-				left = row[colHeadings.IndexOf(clauseLiterals[0])];
+				left = getRowValue(clauseLiterals[0], row);
 			}
 
-			//Perform the implication (changed using De Morgan's law)
+			//Solve the clause
 			return !left | right;
 		}
 
+
 		/*
-		* TODO: Finish This
+		* Tests the current row of the truth table to see if it's entailed in the knowlege base
+		* @row: the current row in the truth table
 		*/
 		private bool testKB(List<bool> row)
 		{
-			//Check if all the facts are true on current line
+			//Check if all the facts are true on current row
 			foreach (string fact in facts)
 			{
-				if (!row[colHeadings.IndexOf(fact)])
+				//If the current fact is false, the row isn't entailed in the knowlege base
+				if (getRowValue(fact, row) == false)
 				{
 					return false;
 				}
 			}
 
-			//Check if all the clauses are true on the current line
+			//Check if all the clauses are true on the current row
 			foreach (string clause in clauses)
 			{
-				if (! solveClause(clause, row))
+				//If the current clause is false, the row isn't entailed in the knowlege base
+				if (solveClause(clause, row) == false)
 				{
 					return false;
 				}
 			}
-			//If left facts entail right fact for all entries in the row, then this row is entailed by the knowlege base
+			
+			//All facts and clauses are true, so the row is entailed in the knowlege base
 			return true;
 		}
 
 		/*
-		* TODO: Finish This
-		*/
-		private bool testAlpha(List<bool> row)
-		{
-			//bool alphaVal = row[colHeadings.IndexOf(question)];
-
-			//TODO: Check if Alpha is a fact
-			//TODO: Figure out how to test for alpha properly
-
-			//Check if alpha is entailed in this row
-			if (! row[colHeadings.IndexOf(question)])
-			{
-				return false;
-			}
-			/*foreach (string clause in alphaClauses)
-			{
-				//if (!(solveClause(clause, row) && alphaVal))
-				if (!(solveClause(clause, row) && alphaVal))
-				{
-					return false;
-				}
-			}*/
-			return true;
-		}
-
-		/*
-		* TODO: Finish This
+		* Checks if the question (alpha) is entailed in the knowlege base
 		*/
 		public override bool Infer()
 		{
-			bool rowIsTrue = true;
-			List<bool> row;
-			bool alphaInKB = false;
+			List<bool> row;			//The current row of the truth table
+			bool alphaInKB = false;	//Used to check if the question (alpha) is in any of the facts or clauses in the knowlege base
 
 			//Check if the alpha literal is contained somewhere in the knowlege base
 			foreach (string s in colHeadings)
@@ -285,48 +275,56 @@ namespace InferenceEngine
 				}
 			}
 
-			//If alpha isn't in any of the knowlege base clauses, end the search now.
+			//If alpha isn't present in the knowlege base, end the search now.
 			if (!alphaInKB)
 			{
 				return false;
 			}
 
-			//Foreach node in KB.iterateOverAllModels() do
+			//Generate each row of the truth table
 			for (int i = 0; i < rowCount; i++)
 			{
+				//Get the current row of the truth table
 				row = getRow(i);
 
-
-				//If Test (n, KB) true
+				//Check if the current row is entailed in the knowlege base
 				if (testKB(row))
 				{
-					//If not Test(n, Q) then
-					if (testAlpha(row))
+					//If alpha is true in the current row of the truth table, increment the number of true worlds
+					if (getRowValue(question, row))
 					{
 						count++;
 					}
+					//If alpha isn't true, then alpha isn't entailed in the knowlege base
 					else
 					{
 						return false;
 					}
 				}
 			}
+			//If alpha is true on all rows that are entailed in the knowlege base, then alpha is also entailed.
 			return true;
 		}
-        public override string getResult()
-        {
-            return count.ToString();
-        }
 
-        public TruthTable(string input) : base(input)
+		/*
+		* Returns a string of the number of true rows in the knowlege base.
+		*/
+		public override string getResult()
 		{
-			colHeadings = new List<string>(facts);
-			getColHeaders();
-			GetAlphaClauses();
-			//columnCount = facts.Count() + 1;
-			columnCount = colHeadings.Count();
-			rowCount = Convert.ToInt32(Math.Pow(2, columnCount));
+			return count.ToString();
+		}
 
+		public TruthTable(string input) : base(input)
+		{
+			//Get a list of all the literals
+			getColHeadings();
+			
+			//Get all the clauses that contain the question (alpha)
+			GetAlphaClauses();
+
+			//Calculate the number of collumns and rows
+			columnCount = colHeadings.Count();
+			rowCount = Convert.ToInt64(Math.Pow(2, columnCount));
 		}
 	}
 }

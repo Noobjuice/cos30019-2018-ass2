@@ -13,17 +13,15 @@ namespace InferenceEngine
 			//Get Arguments from Command Line
 			String[] arguments = Environment.GetCommandLineArgs();
 
+			string method = arguments[1];		//Name of the method to be used
+			string filename = arguments[2];		//Name of the file to be used
+			
+			//FOR TESTING PURPOSES
+			//string method = "TT";
+			//string filename = "test1.txt";
 
-			//TODO: Revert this back (makes testing easier)
-			string method = arguments[1];
-			string filename = arguments[2];
-			//string method = "BC";
-			//string filename = "test8.txt";
-
-			InferenceEngine IE;
-
-			//TODO: Get Problem from file and pass to inference engine.
-
+			InferenceEngine IE;	//InferenceEngine object to be used
+			
 			//Initiate the correct Inference Engine according to input paramaters
 			switch (method)
 			{
@@ -47,10 +45,12 @@ namespace InferenceEngine
 			//If Inference Engine Initiated, get results
 			if (IE != null)
 			{
-                if (IE.Infer() == true)
+				//If Inference Engine returns a result, print it out
+				if (IE.Infer() == true)
                 {
                     Console.WriteLine("YES: " + IE.getResult());
                 }
+				//If Inference engine doesn't return a result, print "NO"
                 else
                 {
                     Console.WriteLine("NO");
