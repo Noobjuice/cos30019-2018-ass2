@@ -10,10 +10,22 @@ namespace InferenceEngine
 	{
 		protected List<String> facts = new List<String>();		//List of all facts in the knowlege base
 		protected List<String> clauses = new List<String>();    //List of all clauses in the knowlege base
-		protected string question;                              //Question being asked (alpha)
+		protected string question = "";                         //Question being asked (alpha)
 
 		public abstract bool Infer();			//Checks if KB entails Alpha	
 		public abstract string getResult();     //Prints the answer of KB entailing alpha
+
+		/*
+		* Checks if the knowlege base and question exist before performing inference
+		*/
+		public bool getInference()
+		{
+			if ((facts.Count == 0 && clauses.Count == 0) || question == "")
+			{
+				return false;
+			}
+			return Infer();
+		}
 
 		/*
 		* Gets the knowlege base and question from file
@@ -31,7 +43,7 @@ namespace InferenceEngine
 			while ((line = file.ReadLine()) != null)
 			{
 				//Get List of clauses and facts
-				if (previousLine == "TELL")
+				if (previousLine == "TELL" && line != "")
 				{
 					//Remove the spaces and trailing semicolon.
 					line = line.Replace(" ", "");

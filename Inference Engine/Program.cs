@@ -18,7 +18,7 @@ namespace InferenceEngine
 			
 			//FOR TESTING PURPOSES
 			//string method = "TT";
-			//string filename = "test1.txt";
+			//string filename = "test8.txt";
 
 			InferenceEngine IE;	//InferenceEngine object to be used
 			
@@ -46,7 +46,7 @@ namespace InferenceEngine
 			if (IE != null)
 			{
 				//If Inference Engine returns a result, print it out
-				if (IE.Infer() == true)
+				if (IE.getInference() == true)
                 {
                     Console.WriteLine("YES: " + IE.getResult());
                 }
