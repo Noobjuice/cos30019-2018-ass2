@@ -20,13 +20,41 @@ namespace InferenceEngine
 		{
 			System.IO.StreamReader file = new System.IO.StreamReader(fileName);
 			string line;    //Holds current line from the file
+			string previousLine = "";	//Holds the previous line in the file.
 
 			//TODO: Change this to work off the content of the prevous line, not the line number.
 			// Read the file line by line.
 			while ((line = file.ReadLine()) != null)
 			{
+				if (previousLine == "TELL")
+				{
+					//Remove the trailing semicolon and convert to an array.
+					line = line.TrimEnd(line[line.Length - 1]);
+					line = line.Replace(" ", "");
+					string[] splitLine = line.Split(';');
+
+					//TODO: Finish this
+					for (int i = 0; i < splitLine.Length; i++)
+					{
+						if (splitLine[i].Contains("=>") == false)
+						{
+							facts.Add(splitLine[i]);
+						}
+
+						else
+						{
+							clauses.Add(splitLine[i]);
+						}
+					}
+				}
+				else if (previousLine == "ASK")
+				{
+					question = line;
+				}
+
+				previousLine = line;
 				//Get relevent data from lines 1 and 4 (starting from 0)
-				switch (lineCount)
+				/*switch (lineCount)
 				{
 					//TELL
 					case 1:
@@ -56,7 +84,7 @@ namespace InferenceEngine
 						question = line;
 						break;
 				}
-				lineCount++;
+				lineCount++;*/
 			}
 
 			//Close the File when finished
